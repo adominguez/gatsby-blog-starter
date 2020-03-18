@@ -6,7 +6,7 @@
 
 // You can delete this file if you're not using it
 const { createFilePath } = require(`gatsby-source-filesystem`)
-const path = require(`path`);
+const path = require(`path`)
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
@@ -28,6 +28,7 @@ exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions
 
   const postList = path.resolve(`./src/templates/blog-list.jsx`)
+  const blogPost = path.resolve(`./src/templates/blog-post.jsx`)
   return graphql(
     `
       {
@@ -57,6 +58,16 @@ exports.createPages = ({ graphql, actions }) => {
       context: {
         posts,
       },
+    })
+
+    posts.forEach(post => {
+      createPage({
+        path: `posts${post.fields.slug}`,
+        component: blogPost,
+        context: {
+          slug: post.fields.slug,
+        },
+      })
     })
 
     return null

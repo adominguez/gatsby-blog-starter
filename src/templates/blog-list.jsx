@@ -1,16 +1,18 @@
-import * as React from 'react';
+import * as React from "react"
+import { Link } from "gatsby"
 
 const BlogPostListTemplate = ({ pageContext }) => {
-  const { posts } = pageContext;
+  const { posts } = pageContext
 
   return (
-      <ul aria-label={"Blog posts"}>
-        {
-          posts.map(post =>
-            <li key={post.fields.slug}>{post.excerpt}</li>)
-        }
-      </ul>
-  );
-};
+    <ul aria-label={"Blog posts"}>
+      {posts.map(post => (
+        <li key={post.fields.slug}>
+          <Link to={`posts${post.fields.slug}`}>{post.excerpt}</Link>
+        </li>
+      ))}
+    </ul>
+  )
+}
 
-export default BlogPostListTemplate;
+export default BlogPostListTemplate

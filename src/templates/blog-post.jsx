@@ -4,6 +4,10 @@ import { graphql } from "gatsby"
 const BlogPostListTemplate = ({ data: { markdownRemark } }) => {
   return (
     <div>
+      <header>
+        <h1>{markdownRemark.frontmatter.title}</h1>
+        <h2>{markdownRemark.frontmatter.date}</h2>
+      </header>
       <main dangerouslySetInnerHTML={{ __html: markdownRemark.html }} />
     </div>
   )
@@ -19,6 +23,10 @@ export const pageQuery = graphql`
       }
       id
       html
+      frontmatter {
+        title
+        date(formatString: "MMMM DD, YYYY")
+      }
     }
   }
 `

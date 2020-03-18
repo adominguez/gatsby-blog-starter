@@ -8,7 +8,7 @@ const BlogPostListTemplate = ({ pageContext }) => {
     <ul aria-label={"Blog posts"}>
       {posts.map(post => (
         <li key={post.fields.slug}>
-          <Link to={`posts${post.fields.slug}`}>{post.excerpt}</Link>
+          <Link to={`posts${post.fields.slug}`}>{post.frontmatter.title}</Link>
         </li>
       ))}
     </ul>

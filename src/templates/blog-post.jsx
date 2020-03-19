@@ -1,13 +1,14 @@
 import * as React from "react"
-import { graphql } from "gatsby"
+import { graphql, Link } from "gatsby"
 
 const BlogPostListTemplate = ({ data: { markdownRemark } }) => {
-  const authorNames = markdownRemark.frontmatter.authors.map(author => author.name).join(', ');
+  const authors = markdownRemark.frontmatter.authors;
+  const authorNames = authors.map(author => author.name).join(', ');
   return (
     <div>
       <header>
         <h1>{markdownRemark.frontmatter.title}</h1>
-        <h2>By {authorNames}</h2>
+        <Link to={`/authors/${authors[0].id}`}><h2>By {authorNames}</h2></Link>
         <h3>{markdownRemark.frontmatter.date}</h3>
       </header>
       <main dangerouslySetInnerHTML={{ __html: markdownRemark.html }} />

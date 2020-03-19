@@ -29,6 +29,7 @@ exports.createPages = ({ graphql, actions }) => {
 
   const postList = path.resolve(`./src/templates/blog-list.jsx`)
   const blogPost = path.resolve(`./src/templates/blog-post.jsx`)
+  const authorPage = path.resolve(`./src/templates/author-page.jsx`)
   return graphql(
     `
       {
@@ -45,9 +46,17 @@ exports.createPages = ({ graphql, actions }) => {
               frontmatter {
                 title
                 authors {
+                  id
                   name
                 }
               }
+            }
+          }
+        }
+        allAuthorsJson(limit: 100) {
+          edges {
+            node {
+              id
             }
           }
         }
@@ -59,7 +68,8 @@ exports.createPages = ({ graphql, actions }) => {
     }
 
     // Create blog posts pages.
-    const posts = result.data.allMarkdownRemark.edges.map(post => post.node)
+    const posts = result.data.allMarkdownRemark.edges.map(post => post.node);
+    const authorIds = result.data.allAuthorsJson.edges.map(author => author.node.id);
 
     createPage({
       path: `/`,
@@ -75,6 +85,19 @@ exports.createPages = ({ graphql, actions }) => {
         component: blogPost,
         context: {
           slug: post.fields.slug,
+        },
+      })
+    })
+
+    console.log(authorIds)
+    authorIds.forEach(authorId => {
+      const authorPosts = posts.filter(post => post.frontmatter.authors.find(author => author.id === authorId));
+      createPage({
+        path: `authors/${authorId}`,
+        component: authorPage,
+        context: {
+          authorId,
+          posts: authorPosts
         },
       })
     })

@@ -6,11 +6,14 @@ const BlogPostListTemplate = ({ pageContext }) => {
 
   return (
     <ul aria-label={"Blog posts"}>
-      {posts.map(post => (
-        <li key={post.fields.slug}>
-          <Link to={`posts${post.fields.slug}`}>{post.frontmatter.title}</Link>
-        </li>
-      ))}
+      {posts.map(post => {
+        const authorNames = post.frontmatter.authors.map(author => author.name).join(', ');
+        return (
+          <li key={post.fields.slug}>
+            <Link to={`posts${post.fields.slug}`}>{post.frontmatter.title} by {authorNames}</Link>
+          </li>
+        )
+      })}
     </ul>
   )
 }

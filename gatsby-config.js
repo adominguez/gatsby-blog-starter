@@ -37,6 +37,13 @@ module.exports = {
         name: `blog`
       }
     },
+    `gatsby-transformer-json`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `./data`
+      }
+    },
     {
       resolve: `gatsby-transformer-remark`,
       options: {
@@ -45,4 +52,7 @@ module.exports = {
       },
     },
   ],
+  mapping: {
+    "MarkdownRemark.frontmatter.authors": `AuthorsJson`,
+  }
 }

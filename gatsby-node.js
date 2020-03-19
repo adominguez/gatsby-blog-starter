@@ -44,6 +44,9 @@ exports.createPages = ({ graphql, actions }) => {
               excerpt(pruneLength: 160)
               frontmatter {
                 title
+                authors {
+                  name
+                }
               }
             }
           }

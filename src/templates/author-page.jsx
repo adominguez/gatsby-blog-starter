@@ -1,17 +1,40 @@
 import * as React from "react"
 import { graphql, Link } from "gatsby"
+import SEO from "../components/seo"
 
 const BlogPostListTemplate = ({ data, pageContext }) => {
   const { authorsJson: author } = data
   const { posts } = pageContext
 
-  const userImgSrc = author.profilePic.childImageSharp.largeSize.src;
+  const userImgSrc = author.profilePic.childImageSharp.largeSize.src
 
   return (
     <div>
+      <SEO
+        title={author.name}
+        description={`The profile page for ${author.name}`}
+        meta={[
+          {
+            property: `og:type`,
+            content: `profile`,
+          },
+          {
+            property: `profile:first_name`,
+            content: author.firstName,
+          },
+          {
+            property: `profile:last_name`,
+            content: author.lastName,
+          },
+          {
+            property: "profile:username",
+            content: author.id,
+          },
+        ]}
+      />
       <header>
         <h1>{author.name}</h1>
-        <img src={userImgSrc} alt={`${author.name} profile picture`}/>
+        <img src={userImgSrc} alt={`${author.name} profile picture`} />
         <ul aria-label={`${author.name}'s Social Media Accounts`}>
           <li>
             <a href={`https://twitter.com/${author.socials.twitter}`}>
@@ -48,7 +71,10 @@ export default BlogPostListTemplate
 export const pageQuery = graphql`
   query AuthorById($authorId: String!) {
     authorsJson(id: { eq: $authorId }) {
+      id
       name
+      firstName
+      lastName
       profilePic {
         childImageSharp {
           largeSize: fixed(width: 500) {

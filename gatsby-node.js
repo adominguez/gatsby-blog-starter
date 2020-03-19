@@ -86,6 +86,7 @@ exports.createPages = ({ graphql, actions }) => {
       context: {
         pageIndex: 0,
         posts: postPages[0],
+        pageCount: postPages.length
       },
     })
 
@@ -96,6 +97,7 @@ exports.createPages = ({ graphql, actions }) => {
         context: {
           pageIndex: i,
           posts: postPages[i],
+          pageCount: postPages.length
         },
       })
     }

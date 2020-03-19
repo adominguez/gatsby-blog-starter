@@ -1,9 +1,11 @@
 import * as React from "react"
 import { Link } from "gatsby"
 import SEO from "../components/seo"
+import ReactPaginate from "react-paginate"
+import { navigate } from "gatsby"
 
 const BlogPostListTemplate = ({ pageContext }) => {
-  const { posts } = pageContext
+  const { posts, pageIndex, pageCount } = pageContext
 
   return (
     <div>
@@ -30,6 +32,30 @@ const BlogPostListTemplate = ({ pageContext }) => {
           )
         })}
       </ul>
+      <ReactPaginate
+        previousLabel={"previous"}
+        nextLabel={"next"}
+        breakLabel={"..."}
+        breakClassName={"break-me"}
+        pageCount={pageCount}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        forcePage={pageIndex}
+        onPageChange={({ selected: pageNum }) => {
+          if (pageNum <= 0) {
+            navigate('/');
+            return;
+          }
+          navigate(`/page/${pageNum + 1}`)
+        }}
+        hrefBuilder={pageIndexPlusOne => {
+          if (pageIndexPlusOne <= 1) return "/"
+          return `/page/${pageIndexPlusOne}`
+        }}
+        containerClassName={"pagination"}
+        subContainerClassName={"pages pagination"}
+        activeClassName={"active"}
+      />
     </div>
   )
 }

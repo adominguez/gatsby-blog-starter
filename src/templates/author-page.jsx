@@ -5,16 +5,23 @@ const BlogPostListTemplate = ({ data, pageContext }) => {
   const { authorsJson: author } = data
   const { posts } = pageContext
 
+  const userImgSrc = author.profilePic.childImageSharp.largeSize.src;
+
   return (
     <div>
       <header>
         <h1>{author.name}</h1>
+        <img src={userImgSrc} alt={`${author.name} profile picture`}/>
         <ul aria-label={`${author.name}'s Social Media Accounts`}>
           <li>
-          <a href={`https://twitter.com/${author.socials.twitter}`}>Twitter</a>
+            <a href={`https://twitter.com/${author.socials.twitter}`}>
+              Twitter
+            </a>
           </li>
           <li>
-            <a href={`https://twitter.com/${author.socials.website}`}>Website</a>
+            <a href={`https://twitter.com/${author.socials.website}`}>
+              Website
+            </a>
           </li>
         </ul>
       </header>
@@ -42,6 +49,13 @@ export const pageQuery = graphql`
   query AuthorById($authorId: String!) {
     authorsJson(id: { eq: $authorId }) {
       name
+      profilePic {
+        childImageSharp {
+          largeSize: fixed(width: 500) {
+            ...GatsbyImageSharpFixed
+          }
+        }
+      }
       socials {
         twitter
         website

@@ -4,6 +4,8 @@
  * See: https://www.gatsbyjs.org/docs/node-apis/
  */
 
+const maxArticlesOnPage = 5;
+
 // You can delete this file if you're not using it
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
@@ -71,13 +73,32 @@ exports.createPages = ({ graphql, actions }) => {
     const posts = result.data.allMarkdownRemark.edges.map(post => post.node);
     const authorIds = result.data.allAuthorsJson.edges.map(author => author.node.id);
 
+    const postPages = posts.reduce((pageArr, post, i) => {
+      const pageNum = Math.floor(i / maxArticlesOnPage);
+      pageArr[pageNum] = pageArr[pageNum] || [];
+      pageArr[pageNum].push(post);
+      return pageArr;
+    }, [])
+
     createPage({
       path: `/`,
       component: postList,
       context: {
-        posts,
+        pageIndex: 0,
+        posts: postPages[0],
       },
     })
+
+    for (let i = 1; i < postPages.length; i++) {
+      createPage({
+        path: `/page/${i + 1}`,
+        component: postList,
+        context: {
+          pageIndex: i,
+          posts: postPages[i],
+        },
+      })
+    }
 
     posts.forEach(post => {
       createPage({
@@ -89,7 +110,6 @@ exports.createPages = ({ graphql, actions }) => {
       })
     })
 
-    console.log(authorIds)
     authorIds.forEach(authorId => {
       const authorPosts = posts.filter(post => post.frontmatter.authors.find(author => author.id === authorId));
       createPage({

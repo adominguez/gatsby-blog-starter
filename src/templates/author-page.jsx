@@ -1,10 +1,11 @@
 import * as React from "react"
 import { graphql, Link } from "gatsby"
 import SEO from "../components/seo"
+import { Pagination } from "../components/pagination"
 
 const BlogPostListTemplate = ({ data, pageContext }) => {
   const { authorsJson: author } = data
-  const { posts } = pageContext
+  const { posts, pageIndex, pageCount } = pageContext
 
   const userImgSrc = author.profilePic.childImageSharp.largeSize.src
 
@@ -61,6 +62,12 @@ const BlogPostListTemplate = ({ data, pageContext }) => {
             )
           })}
         </ul>
+        <Pagination
+          pageCount={pageCount}
+          pageIndex={pageIndex}
+          rootPath={`/authors/${author.id}`}
+          pagePath={`/authors/${author.id}/page`}
+        />
       </main>
     </div>
   )

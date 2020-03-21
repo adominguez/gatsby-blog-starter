@@ -6,6 +6,13 @@
 
 const maxArticlesOnPage = 5;
 
+const getPostPages = (posts) => posts.reduce((pageArr, post, i) => {
+  const pageNum = Math.floor(i / maxArticlesOnPage);
+  pageArr[pageNum] = pageArr[pageNum] || [];
+  pageArr[pageNum].push(post);
+  return pageArr;
+}, []);
+
 // You can delete this file if you're not using it
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
@@ -73,12 +80,17 @@ exports.createPages = ({ graphql, actions }) => {
     const posts = result.data.allMarkdownRemark.edges.map(post => post.node);
     const authorIds = result.data.allAuthorsJson.edges.map(author => author.node.id);
 
-    const postPages = posts.reduce((pageArr, post, i) => {
-      const pageNum = Math.floor(i / maxArticlesOnPage);
-      pageArr[pageNum] = pageArr[pageNum] || [];
-      pageArr[pageNum].push(post);
-      return pageArr;
-    }, [])
+    posts.forEach(post => {
+      createPage({
+        path: `posts${post.fields.slug}`,
+        component: blogPost,
+        context: {
+          slug: post.fields.slug,
+        },
+      })
+    })
+
+    const postPages = getPostPages(posts);
 
     createPage({
       path: `/`,
@@ -102,26 +114,34 @@ exports.createPages = ({ graphql, actions }) => {
       })
     }
 
-    posts.forEach(post => {
-      createPage({
-        path: `posts${post.fields.slug}`,
-        component: blogPost,
-        context: {
-          slug: post.fields.slug,
-        },
-      })
-    })
-
     authorIds.forEach(authorId => {
       const authorPosts = posts.filter(post => post.frontmatter.authors.find(author => author.id === authorId));
+
+      const authorPostPages = getPostPages(authorPosts);
+
       createPage({
         path: `authors/${authorId}`,
         component: authorPage,
         context: {
           authorId,
-          posts: authorPosts
+          posts: authorPostPages[0],
+          pageIndex: 0,
+          pageCount: authorPostPages.length
         },
       })
+
+      for (let i = 1; i < authorPostPages.length; i++) {
+        createPage({
+          path: `/authors/${authorId}/page/${i + 1}`,
+          component: authorPage,
+          context: {
+            authorId,
+            posts: authorPostPages[i],
+            pageIndex: i,
+            pageCount: authorPostPages.length
+          },
+        })
+      }
     })
 
     return null

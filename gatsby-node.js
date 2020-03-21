@@ -58,6 +58,7 @@ exports.createPages = ({ graphql, actions }) => {
                   id
                   name
                 }
+                description
               }
             }
           }

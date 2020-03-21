@@ -1,12 +1,13 @@
 import * as React from "react"
 import { graphql, Link } from "gatsby"
 import SEO from "../components/seo"
+import * as styles from "./blog-post.module.css"
 
 const BlogPostListTemplate = ({ data: { markdownRemark } }) => {
   const authors = markdownRemark.frontmatter.authors
   const authorNames = authors.map(author => author.name).join(", ")
   return (
-    <div>
+    <div className={styles.parentContainer}>
       <SEO
         title={markdownRemark.frontmatter.title}
         description={markdownRemark.frontmatter.description}
@@ -32,13 +33,18 @@ const BlogPostListTemplate = ({ data: { markdownRemark } }) => {
         ]}
       />
       <header>
-        <h1>{markdownRemark.frontmatter.title}</h1>
-        <Link to={`/authors/${authors[0].id}`}>
-          <h2>By {authorNames}</h2>
-        </Link>
-        <h3>{markdownRemark.frontmatter.date}</h3>
+        <h1 className={styles.title}>{markdownRemark.frontmatter.title}</h1>
+        <div className={styles.authorNameAndDate}>
+          <Link to={`/authors/${authors[0].id}`} className={styles.authorName}>
+            <h2>By {authorNames}</h2>
+          </Link>
+          <h3>{markdownRemark.frontmatter.date}</h3>
+        </div>
       </header>
       <main dangerouslySetInnerHTML={{ __html: markdownRemark.html }} />
+      <footer>
+        <Link to={'/'}>Go Back Home</Link>
+      </footer>
     </div>
   )
 }

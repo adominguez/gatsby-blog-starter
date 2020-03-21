@@ -1,9 +1,8 @@
 import * as React from "react"
-import { Link } from "gatsby"
 import SEO from "../components/seo"
-import ReactPaginate from "react-paginate"
-import { navigate } from "gatsby"
 import { Pagination } from "../components/pagination"
+import { PostCard } from "../components/post-card"
+import * as styles from "./blog-list.module.css"
 
 const BlogPostListTemplate = ({ pageContext }) => {
   const { posts, pageIndex, pageCount } = pageContext
@@ -19,17 +18,17 @@ const BlogPostListTemplate = ({ pageContext }) => {
           },
         ]}
       />
-      <ul aria-label={"Blog posts"}>
+      <h1>My Site</h1>
+      <ul aria-label={"Blog posts"} className={styles.blogList}>
         {posts.map(post => {
-          const authorNames = post.frontmatter.authors
-            .map(author => author.name)
-            .join(", ")
           return (
-            <li key={post.fields.slug}>
-              <Link to={`posts${post.fields.slug}`}>
-                {post.frontmatter.title} by {authorNames}
-              </Link>
-            </li>
+              <PostCard
+                key={post.fields.slug}
+                slug={post.fields.slug}
+                title={post.frontmatter.title}
+                description={post.frontmatter.description}
+                authors={post.frontmatter.authors}
+              />
           )
         })}
       </ul>

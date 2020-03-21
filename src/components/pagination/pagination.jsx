@@ -1,6 +1,7 @@
 import * as React from "react"
 import { navigate } from "gatsby"
 import ReactPaginate from "react-paginate"
+import './pagination.css';
 
 export const Pagination = ({ pageCount, pageIndex, rootPath, pagePath }) => {
   return (
